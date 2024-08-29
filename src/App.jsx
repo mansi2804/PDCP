@@ -5,6 +5,9 @@ import Check from "./Pages/Check";
 import Plans from "./Pages/Plans";
 import Events from "./Pages/Events";
 
+import CreatePlan from "./Pages/CreatePlan";
+import ModifyPlan from "./Pages/ModifyPlan";
+
 
 function App() {
   return (
@@ -15,6 +18,10 @@ function App() {
           <Route path="/Check" element={<Check />} />
           <Route path="/Plans" element={<Plans />} />
           <Route path="/Events" element={<Events />} />
+          
+          <Route path="/CreatePlan" element={<CreatePlan />} />
+          <Route path="/ModifyPlan" element={<ModifyPlan />} />
+          
         </Routes>
       </BrowserRouter>
     </>
