@@ -1,12 +1,12 @@
 import React from 'react'
 import { Footer } from '../components/footer';
 import { Cards } from '../components/Cards';
-import { Search } from '../components/Search';
+import { Eventheader } from '../components/Eventheader';
 
 const Plans = () => {
     return (
         <div>
-            <Search />
+            <Eventheader />
             <Cards />
             <Footer />
         </div>
