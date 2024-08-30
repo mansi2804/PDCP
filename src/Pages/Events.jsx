@@ -1,12 +1,12 @@
 import React from 'react'
 import { Footer } from '../components/footer';
 import { Rsvp } from '../components/Rsvp';
-import { Search } from '../components/Search';
+import { Eventheader } from '../components/Eventheader';
 
 const Events = () => {
     return (
         <div>
-            <Search />
+            <Eventheader />
             <Rsvp />
             <Footer />
         </div>
