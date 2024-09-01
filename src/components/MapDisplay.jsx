@@ -13,7 +13,7 @@ function MapDisplay({ isBlurred }) {
         return () => map.remove();
     }, []);
 
-    return <div ref={mapRef} style={{ height: '100%', width: '50%', filter: isBlurred ? 'blur(8px)' : 'none' }} />;
+    return <div ref={mapRef} style={{ display: 'flex-1', height: '77.5vh'}}/>;
 }
 
 export default MapDisplay;
