@@ -5,7 +5,7 @@ import Check from "./Pages/Check";
 import Plans from "./Pages/Plans";
 import Events from "./Pages/Events";
 import Details from "./pages/Details";
-
+import DetailsCollab from "./Pages/DetailsCollab";
 import CreatePlan from "./Pages/CreatePlan";
 import ModifyPlan from "./Pages/ModifyPlan";
 
@@ -20,6 +20,7 @@ function App() {
           <Route path="/Plans" element={<Plans />} />
           <Route path="/Events" element={<Events />} />
           <Route path="/Details" element={<Details />} />
+          <Route path="/DetailsCollab" element={<DetailsCollab />} />
           <Route path="/CreatePlan" element={<CreatePlan />} />
           <Route path="/ModifyPlan" element={<ModifyPlan />} />
           

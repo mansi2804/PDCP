@@ -47,67 +47,70 @@ export function Plandescription() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-b from-[#000235] to-[#8080d7] p-8">
-      <div className="bg-gradient-to-b from-[#000235] to-[#8080d7] p-8 rounded-lg shadow-lg grid grid-cols-1 gap-4  mb-8 flex ">
-        <h2 className="white text-2xl font-bold mb-4 text-white">PLAN NAME</h2>
-                            <img
-                      src={event.imageUrl || '/placeholder.svg'}
-                      alt={event.name}
-                      width={200}
-                      height={200}
-                      className="w-48 h-48 object-cover"
-                      style={{ aspectRatio: "200/200", objectFit: "cover" }} />
-{/* </div> */}
-        <div className="ml-4 ">
-          <p className="text-white">
-            Lorem ipsum dolor sit amet consectetur adipiscing eli mattis sit
-            phasellus mollis sit aliquam sit nullam.
-          </p>
-          <p className="text-white mt-4">
-            Date: 07-28-2024<br />
-            Time: 8:00pm<br />
-            Location: Venue Address<br />
-          </p>
+    <div className="bg-gradient-to-b from-[#000235] to-[#8080d7] p-8 flex flex-col h-[78vh]">
+      <main className="flex-1 overflow-y-auto bg-gradient-to-b from-[#000235] to-[#8080d7]">
+        <div className="flex">
+          <div className="flex-shrink-0 mb-4">
+            <h2 className="white text-2xl font-bold mb-4 text-white">PLAN NAME</h2>
+            <img
+              src={event.imageUrl || '/placeholder.svg'}
+              alt={event.name}
+              width={200}
+              height={200}
+              className="w-48 h-48 object-cover rounded"
+              style={{ aspectRatio: "200/200", objectFit: "cover" }} />
+          </div>
+          <div className="ml-8 ml-4 mt-10">
+             <h6 className="white text-2x1 font-bold text-white">Details</h6>
+            <p className="text-white">
+              Lorem ipsum dolor sit amet consectetur adipiscing eli mattis sit
+              phasellus mollis sit aliquam sit nullam.
+            </p>
+            <p className="text-white mt-4">
+            📅 Date: 07-28-2024<br />
+            ⏰ Time: 8:00pm<br />
+            📍 Location: Venue Address<br />
+            </p>
+          </div>
         </div>
-      </div>
-      
+
 
 
         {/* Attendees and Announcements */}
         <div className="bg-gradient-to-t from-[#8d8ddf] to-white p-8 rounded-lg shadow-lg grid grid-cols-2 gap-8 mb-8 flex justify around">
           <div>
             <h3 className="text-xl font-bold mb-4">ATTENDEES</h3>
-            {attendees.length > 0 ?(
-            attendees.map((attendee, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-t from-[#716F97] to-[#8d8ddf] p-4 rounded-lg mb-2 flex items-center"
-              >
-                <div className="bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center mr-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5.121 17.804A8.96 8.96 0 0112 15c2.136 0 4.11.701 5.879 1.804M15 9a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
+            {attendees.length > 0 ? (
+              attendees.map((attendee, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-t from-[#716F97] to-[#8d8ddf] p-4 rounded-lg mb-2 flex items-center"
+                >
+                  <div className="bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center mr-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 text-gray-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5.121 17.804A8.96 8.96 0 0112 15c2.136 0 4.11.701 5.879 1.804M15 9a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold">{attendee.name}</p>
+                    <p className="text-black-500">{attendee.role}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold">{attendee.name}</p>
-                  <p className="text-black-500">{attendee.role}</p>
-                </div>
-              </div>
-            ))
-          ): (
-            <p className="text-black">No attendees are available</p>
-          )}
+              ))
+            ) : (
+              <p className="text-black">No attendees are available</p>
+            )}
           </div>
 
           <div>
@@ -153,9 +156,9 @@ export function Plandescription() {
               </div>
             </div>
           </div>
-        
-          {/*Buttons*/}
-          <div className="flex justify-around">
+        </div>
+        {/*Buttons*/}
+        <div className="flex justify-around">
           <button className="bg-gradient-to-t from-[#8d8ddf] to-white rounded-full border border-input px-8 py-2 text-base font-medium shadow-lg transition-transform transform hover:from-[#8080d7] hover:to-white hover:scale-105 hover:bg-accent hover:text-accent-foreground"
             onClick={handleInviteClick}>
             INVITE
@@ -176,7 +179,7 @@ export function Plandescription() {
                     onClick={handleCancelClick}
                     className="text-xl font-bold text-black"
                   >
-                  ×
+                    ×
                   </button>
                 </div>
                 <p className="text-lg mb-4">Are you sure you want to confirm the deletion?</p>
@@ -185,13 +188,13 @@ export function Plandescription() {
                     onClick={handleConfirmDelete}
                     className="bg-gradient-to-t from-[#F52E13] to-white px-6 py-2 rounded-lg"
                   >
-                  Delete
+                    Delete
                   </button>
                   <button
                     onClick={handleCancelClick}
                     className="bg-white border border-gray-300 px-6 py-2 rounded-lg"
                   >
-                  CANCEL
+                    CANCEL
                   </button>
                 </div>
               </div>
@@ -205,7 +208,7 @@ export function Plandescription() {
                     onClick={handleCancelClick}
                     className="text-xl font-bold text-white"
                   >
-                  ×
+                    ×
                   </button>
                 </div>
                 <h2 className="text-xl font-bold mb-4 text-center">Share Event Plan</h2>
@@ -224,14 +227,14 @@ export function Plandescription() {
                     onClick={handleSendInvite}
                     className="bg-gradient-to-t from-[#8d8ddf] to-white rounded-full border border-input px-8 py-2 text-black font-medium shadow-lg transition-transform transform hover:from-[#8080d7] hover:to-white hover:scale-105 hover:bg-accent hover:text-accent-foreground"
                   >
-                  Send Invite
+                    Send Invite
                   </button>
                 </div>
               </div>
             </div>
           )}
-          </div>
         </div>
+      </main>
     </div>
   );
 }
