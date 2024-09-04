@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import L from 'leaflet';
+// import L from 'leaflet';
 
 function MapDisplay({ isBlurred }) {
     const mapRef = useRef(null);

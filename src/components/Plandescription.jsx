@@ -13,6 +13,14 @@ export function Plandescription() {
     // { name: "Mansi", comment: "Hey..." },
     // { name: "Varshitha", comment: "Hey..." },
   ];
+  const [event, setEvent] = useState({
+    imageUrl: '',
+    name: '',
+    details: '',
+    date: '',
+    time: '',
+    location: ''
+  });
   const [isDeletePopupVisible, setDeletePopupVisible] = useState(false);
 
   const [isInvitePopupVisible, setIsInvitePopupVisible] = useState(false);
@@ -60,18 +68,19 @@ export function Plandescription() {
               className="w-48 h-48 object-cover rounded"
               style={{ aspectRatio: "200/200", objectFit: "cover" }} />
           </div>
-          <div className="ml-8 ml-4 mt-10">
+          {event.details && (
+          <div className="ml-4 mt-10">
              <h6 className="white text-2x1 font-bold text-white">Details</h6>
             <p className="text-white">
-              Lorem ipsum dolor sit amet consectetur adipiscing eli mattis sit
-              phasellus mollis sit aliquam sit nullam.
+              {event.details}
             </p>
             <p className="text-white mt-4">
-            📅 Date: 07-28-2024<br />
-            ⏰ Time: 8:00pm<br />
-            📍 Location: Venue Address<br />
+            {event.date && <>📅 Date: {event.date}<br /></>}
+            {event.time && <>⏰ Time: {event.time}<br /></>}
+            {event.location && <>📍 Location: {event.location}<br /></>}
             </p>
           </div>
+          )}
         </div>
 
 
