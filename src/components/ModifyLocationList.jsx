@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef }  from 'react';
 import { Button } from "/src/components/ui/button";
 import { Share } from "/src/components/Share";
+import L from 'leaflet';
 import CustomScrollbarContainer from './ui/CustomScrollbarContainer';
 import ModifyPlanModal from '/src/components/ModifyPlanModal';
 
@@ -20,6 +21,17 @@ export function ModifyLocationList() {
         setModalOpen(false);
     };
 
+
+    const mapRef = useRef(null);
+
+    useEffect(() => {
+        const map = L.map(mapRef.current).setView([41.8781, -87.6298], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        return () => map.remove();
+    }, []);
 
     const data = {
         events: [
@@ -54,7 +66,7 @@ export function ModifyLocationList() {
                 attendees: "15",
                 imageUrl:
                     "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            },{
+            }, {
                 name: "Sample Event - Test",
                 date: "07-28-2024",
                 time: "8:00pm",
@@ -101,8 +113,8 @@ export function ModifyLocationList() {
     };
 
     return (
-        <div className="Main1 flex flex-row h-[78vh]">
-            <main className="Child1 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7] relative">
+        <div className="Main1 flex flex-row h-[78vh] z-50">
+            <main className="Child1 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7] relative z-50">
                 <h2 className="text-xl font-semibold text-white mb-4">The Top 10 Places Near Chicago</h2>
                 {/* Filters */}
                 <div className="mb-4">
@@ -201,17 +213,14 @@ export function ModifyLocationList() {
             </main>
 
 
-            <div className="Child2 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7]">
-                {/* Placeholder for Map API integration */}
-
-                {/* Backend team should replace the following URL with the actual map API URL */}
-                {/* <iframe src="YOUR_MAP_API_URL" style={{ width: '100%', height: '100%' }}></iframe> */}
-                {/*<MapDisplay />*/}
-                <h2 className="text-xl font-semibold text-white mb-4">place map here</h2>
-
+            <div className="Child2 w-1/2 bg-gradient-to-b from-[#000235] to-[#8080d7]" style={{ position: 'relative', zIndex: 50 }}>
+                {/* Adjusted to ensure this div can control its layering relative to other elements */}
+                <div ref={mapRef} style={{ width: '100%', height: '77.5vh', zIndex: 10 }}>
+                    {/* Your map will fill this div */}
+                </div>
             </div>
 
-           
+
             <ModifyPlanModal isOpen={modalOpen} onClose={handleCloseModal} />
 
         </div>

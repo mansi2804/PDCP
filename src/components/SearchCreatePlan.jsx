@@ -11,18 +11,26 @@ import {
 import { Button } from "/src/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "/src/components/ui/avatar";
 import { Separator } from "/src/components/ui/separator";
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import LocationList from './LocationList';
+import { LocationContext } from '/src/components/LocationContext';  
+
+
 
 export function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
   const [showLocations, setShowLocations] = useState(false);
 
+
+  const [locationInput, setLocationInput] = useState('Chicago, IL'); // Default location
+
+
+  const { fetchLocations } = useContext(LocationContext);
+
   const handleSearch = () => {
-    console.log("Search Query:", searchQuery);
-    console.log("Location Query:", locationQuery);
     setShowLocations(true); // Show the location list on search
+    fetchLocations(locationQuery, searchQuery);
   };
   
   return (
@@ -62,7 +70,7 @@ export function Search() {
                 variant="ghost"
                 size="icon"
                 className="rounded-full"
-                onClick={() => {
+                onClick={() => {handleSearch()
                   console.log("Search button clicked");
                   console.log("Search Query:", searchQuery);
                   console.log("Location Query:", locationQuery);

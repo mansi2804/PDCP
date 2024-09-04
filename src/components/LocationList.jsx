@@ -1,42 +1,40 @@
-import React, { useState } from 'react';
+import React, { useContext,useState, useEffect, useRef }  from 'react';
 import CreatePlanModal from '/src/components/CreatePlanModal';
-import MapDisplay from '/src/components/MapDisplay';
+//import MapDisplay from '/src/components/MapDisplay';
+import L from 'leaflet';
 import CustomScrollbarContainer from './ui/CustomScrollbarContainer';
+import { LocationContext } from '/src/components/LocationContext';  
 
 
-const locations = [
-    {
-        name: "The Art Institute of Chicago", rating: 4.7, location: "Chicago, IL", distance: 1, price: 10.5, imageUrl:
-            "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-    },
-    {
-        name: "Millennium Park", rating: 4.8, location: "Chicago, IL", distance: 2, price: 20, imageUrl:
-            "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-    },
-    {
-        name: "Willis Tower", rating: 4.5, location: "Chicago, IL", distance: 3, price: 5, imageUrl:
-            "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-    },
-    { name: "Navy Pier", rating: 4.3, location: "Chicago, IL", distance: 0.5, price: 30 },
-    { name: "Lincoln Park Zoo", rating: 4.6, location: "Chicago, IL", distance: 2.5, price: 15 },
-    { name: "Shedd Aquarium", rating: 4.4, location: "Chicago, IL", distance: 1.5, price: 23 },
-    { name: "Field Museum", rating: 4.5, location: "Chicago, IL", distance: 1, price: 12 },
-    { name: "Chicago Riverwalk", rating: 4.8, location: "Chicago, IL", distance: 1, price: 11 },
-    { name: "Cloud Gate", rating: 4.7, location: "Chicago, IL", distance: 1, price: 21 },
-    { name: "Museum of Science and Industry", rating: 4.5, location: "Chicago, IL", distance: 4, price: 76 }
-];
 
 function LocationList() {
+    const { locations } = useContext(LocationContext);
     const [priceFilter, setPriceFilter] = useState('');
     const [distanceFilter, setDistanceFilter] = useState('');
     const [ratingFilter, setRatingFilter] = useState('');
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState(null);
 
+    const [locationInput, setLocationInput] = useState('Chicago, IL'); // Default location
+    const [businessType, setSearchQuery] = useState(''); // Search query state
+
+    
+
     const handleAddClick = (location) => {
         setSelectedLocation(location);
         setModalOpen(true);
     };
+
+    const mapRef = useRef(null);
+
+    useEffect(() => {
+        const map = L.map(mapRef.current).setView([41.8781, -87.6298], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        return () => map.remove();
+    }, []);
 
     const filteredLocations = locations.filter(location => {
         return (
@@ -54,9 +52,9 @@ function LocationList() {
     });
 
     return (
-        <div className="Main1 flex flex-row h-[78vh]">
-            <div className="Child1 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7] relative">
-                <h2 className="text-xl font-semibold text-white mb-4">The Top 10 Places Near Chicago</h2>
+        <div className="Main1 flex flex-row h-[78vh], zIndex: 50">
+            <div className="Child1 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7] relative, zIndex: 50">
+                <h2 className="text-xl font-semibold text-white mb-4"> {`Top Places for ${businessType} Near ${locationInput}`}</h2>
                 {/* Filters */}
                 <div className="mb-4">
                     {/* Price filter */}
@@ -93,7 +91,7 @@ function LocationList() {
                                 {filteredLocations.map((location, index) => (
                                     <div key={index} className="bg-gradient-to-r from-[#8D8DDA] to-white rounded-lg shadow-md overflow-hidden flex">
                                         <img
-                                            src={location.imageUrl || "/placeholder.svg"}
+                                            src={location.photo_url || "/placeholder.svg"}
                                             alt={location.name}
                                             width={100}
                                             height={100}
@@ -103,7 +101,8 @@ function LocationList() {
                                         <div className="flex-1 p-4">
                                             <h3 className="text-sm font-semibold">{location.name}</h3>
                                             <p className="text-xs">Rating: {location.rating}</p>
-                                            <p className="text-xs">Location: {location.location}</p>
+                                            <p className="text-xs">Location: {location.address}</p>
+                                            <p className="text-xs">phone_number: {location.phone_number}</p>
                                             <p className="text-xs">Distance: {location.distance} miles</p>
                                             <p className="text-xs">Price: ${location.price}</p>
                                         </div>
@@ -126,15 +125,12 @@ function LocationList() {
             </div>
 
 
-            <div className="Child2 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7]">
-                {/* Placeholder for Map API integration */}
-                
-                    {/* Backend team should replace the following URL with the actual map API URL */}
-                    {/* <iframe src="YOUR_MAP_API_URL" style={{ width: '100%', height: '100%' }}></iframe> */}
-                    {/*<MapDisplay />*/}
-                    <h2 className="text-xl font-semibold text-white mb-4">place map here</h2>
-             
-            </div>
+            <div className="Child2 w-1/2 bg-gradient-to-b from-[#000235] to-[#8080d7]" style={{ position: 'relative', zIndex: 50 }}>
+    {/* Adjusted to ensure this div can control its layering relative to other elements */}
+    <div ref={mapRef} style={{ width: '100%', height: '77.5vh', zIndex: 10 }}>
+        {/* Your map will fill this div */}
+    </div>
+</div>
 
 
             <CreatePlanModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} planDetails={selectedLocation} />
