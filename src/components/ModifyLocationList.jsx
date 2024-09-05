@@ -1,24 +1,30 @@
-import React, { useState, useEffect, useRef }  from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Button } from "/src/components/ui/button";
-import { Share } from "/src/components/Share";
 import L from 'leaflet';
 import CustomScrollbarContainer from './ui/CustomScrollbarContainer';
 import ModifyPlanModal from '/src/components/ModifyPlanModal';
 
+import { LocationContext } from '/src/components/LocationContext';
+
 export function ModifyLocationList() {
+    const { locations, setSelectLocation } = useContext(LocationContext);
+    const [selectedEvent, setSelectedEvent] = useState(null); 
+    const { selectedLocation } = useContext(LocationContext);
     const [events, setEvents] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [showShareDialog, setShowShareDialog] = useState(false);
+    const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
-    const handleOpenModal = () => {
+    const handleOpenModal = (event) => {
+        setSelectedEvent(event);  // Store the selected event
         setModalOpen(true);
     };
 
 
     const handleCloseModal = () => {
         setModalOpen(false);
+        setSelectedEvent(null);  
     };
 
 
@@ -29,64 +35,26 @@ export function ModifyLocationList() {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-
+        fetchEvents();
         return () => map.remove();
     }, []);
 
-    const data = {
-        events: [
-            {
-                name: "Sample Event - Test",
-                date: "07-28-2024",
-                time: "8:00pm",
-                attendees: "15",
-                imageUrl:
-                    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            },
-            {
-                name: "Sample Event - Test",
-                date: "07-28-2024",
-                time: "8:00pm",
-                attendees: "15",
-                imageUrl:
-                    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            },
-            {
-                name: "Sample Event - Test",
-                date: "07-28-2024",
-                time: "8:00pm",
-                attendees: "15",
-                imageUrl:
-                    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            },
-            {
-                name: "Sample Event - Test",
-                date: "07-28-2024",
-                time: "8:00pm",
-                attendees: "15",
-                imageUrl:
-                    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            }, {
-                name: "Sample Event - Test",
-                date: "07-28-2024",
-                time: "8:00pm",
-                attendees: "15",
-                imageUrl:
-                    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            },
 
-        ],
-    };
 
     const fetchEvents = async () => {
+        setError('');
         setLoading(true);
         try {
-            // const response = await fetch('/api/events'); // Replace with your API endpoint
-            // const data = await response.json();
-            setEvents(data.events); // Assuming `data.events` contains the list of events
-            setHasMore(data.hasMore); // Assuming `data.hasMore` indicates if there are more events
+            const response = await fetch('http://localhost:8000/api/events/my-created/', { credentials: 'include' });
+            if (!response.ok) throw new Error('Failed to fetch events');
+            const data = await response.json();
+            setEvents(data.events);
+            //setEvents(data.events); // Assuming `data.events` contains the list of events
+            //setHasMore(data.hasMore); // Assuming `data.hasMore` indicates if there are more events
+
         } catch (error) {
             console.error("Error fetching events:", error);
+            setError('Failed to load events.');
         } finally {
             setLoading(false);
         }
@@ -115,7 +83,7 @@ export function ModifyLocationList() {
     return (
         <div className="Main1 flex flex-row h-[78vh] z-50">
             <main className="Child1 w-1/2  bg-gradient-to-b from-[#000235] to-[#8080d7] relative z-50">
-                <h2 className="text-xl font-semibold text-white mb-4">The Top 10 Places Near Chicago</h2>
+                <h2 className="text-xl font-semibold text-white mb-4">My created Events:</h2>
                 {/* Filters */}
                 <div className="mb-4">
                     {/* Price filter */}
@@ -169,22 +137,18 @@ export function ModifyLocationList() {
                                                             style={{ aspectRatio: "200/200", objectFit: "cover" }}
                                                         />
                                                         <div className="flex-1 p-4">
-                                                            <h3 className="text-lg font-semibold">{event.name}</h3>
-                                                            <p className="text-sm font-semibold">
-                                                                {event.date} - {event.time}
-                                                            </p>
-                                                            <p className="text-sm font-semibold">
-                                                                <UserIcon className="w-4 h-4 inline-block mr-1" />
-                                                                {event.attendees} Attending
-                                                            </p>
+                                                            <h3 className="text-lg font-semibold">{event.title}</h3>
+                                                            <p className="text-sm font-semibold">{event.date}</p>
+                                                            <p className="text-sm">{event.location}</p>
                                                         </div>
                                                         <div className="relative h-full">
                                                             <div className="absolute bottom-8 right-8 flex flex-row gap-2">
-                                                                <Button onClick={handleOpenModal}
+                                                                <Button onClick={() => handleOpenModal(event)}
                                                                     variant="outline"
-                                                                    className="w-28 rounded-full border border-gray-400 bg-gradient-to-t from-[#8D8DDA] to-white text-black hover:from-[#8080d7] hover:to-white shadow-md"
+                                                                    key={index}
+                                                                    className="mt-4 rounded-full border border-gray-400 bg-gradient-to-t from-[#8D8DDA] to-white text-black hover:from-[#8080d7] hover:to-white shadow-md"
                                                                 >
-                                                                    Edit
+                                                                    Modify
                                                                 </Button>
 
                                                             </div>
@@ -221,7 +185,7 @@ export function ModifyLocationList() {
             </div>
 
 
-            <ModifyPlanModal isOpen={modalOpen} onClose={handleCloseModal} />
+            <ModifyPlanModal isOpen={modalOpen} onClose={handleCloseModal} eventData={selectedEvent} />
 
         </div>
     );
@@ -246,3 +210,8 @@ function UserIcon(props) {
         </svg>
     );
 }
+
+
+
+
+export default ModifyLocationList;

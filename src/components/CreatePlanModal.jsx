@@ -1,7 +1,10 @@
-    import React, { useState } from 'react';
+    import React, { useState, useContext } from 'react';
+    import { LocationContext } from '/src/components/LocationContext';
+
 
     const CreatePlanModal = ({ isOpen, onClose }) => {
     // Adding state for each form field
+    const { selectedLocation } = useContext(LocationContext);
     const [planName, setPlanName] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
@@ -15,7 +18,7 @@
                 title: planName,
                 date: `${date}T${time}`, // Assuming the backend expects a combined date-time string in ISO format
                 description: description,
-                location: "Not specified", // Adjust based on your form, if you have location input
+                location: selectedLocation ? selectedLocation.address : "Not specified", // Adjust based on your form, if you have location input
                 numberOfPeople: numberOfPeople
             };
     

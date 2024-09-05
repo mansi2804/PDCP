@@ -8,12 +8,13 @@ import { LocationContext } from '/src/components/LocationContext';
 
 
 function LocationList() {
-    const { locations } = useContext(LocationContext);
+    const { locations,setSelectLocation } = useContext(LocationContext);
     const [priceFilter, setPriceFilter] = useState('');
     const [distanceFilter, setDistanceFilter] = useState('');
     const [ratingFilter, setRatingFilter] = useState('');
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState(null);
+    
 
     const [locationInput, setLocationInput] = useState('Chicago, IL'); // Default location
     const [businessType, setSearchQuery] = useState(''); // Search query state
@@ -21,6 +22,7 @@ function LocationList() {
     
 
     const handleAddClick = (location) => {
+        setSelectLocation(location);
         setSelectedLocation(location);
         setModalOpen(true);
     };

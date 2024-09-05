@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ModifyPlanModal = ({ isOpen, onClose }) => {
+const ModifyPlanModal = ({ isOpen, onClose, eventData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [locations, setLocations] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [category, setCategory] = useState('');
+
+
+
+    const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [description, setDescription] = useState('');
+    const [numberOfPeople, setnumberOfPeople] = useState('');
+    const [location, setLocation] = useState('');
+
+
 
 
     // Simulated location data (hardcoded for demonstration)
@@ -29,6 +40,52 @@ const ModifyPlanModal = ({ isOpen, onClose }) => {
         setSearchQuery(selected ? `${selected.name}, ${selected.city}` : '');
         setLocations([]); // Clear locations after selection
     };
+
+
+    // Populate form fields when eventData changes
+    useEffect(() => {
+        if (eventData) {
+            setTitle(eventData.title);
+            if (eventData.date) {
+                const eventDate = new Date(eventData.date).toISOString().split('T')[0];
+                setDate(eventDate);
+                const eventTime = new Date(eventData.date).toISOString().split('T')[1].substring(0, 5);
+                setTime(eventTime);
+            }
+            setDescription(eventData.description);
+            setLocation(eventData.location);
+            setnumberOfPeople(eventData.numberOfPeople);
+        }
+    }, [eventData]);
+
+    const handleSubmit = async () => {
+        const fullDateTime = `${date}T${time}`;
+        const updatedEventData = {
+            title,
+            date,
+            description,
+            numberOfPeople,
+            location
+        };
+
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/events/${eventData.id}/edit/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                'credentials': 'include',
+                body: JSON.stringify(updatedEventData)
+            });
+            if (!response.ok) throw new Error('Failed to update event');
+            alert('Event updated successfully');
+            onClose();
+        } catch (error) {
+            alert('Error updating event: ' + error.message);
+        }
+    };
+
 
     if (!isOpen) return null;
 
@@ -55,59 +112,59 @@ const ModifyPlanModal = ({ isOpen, onClose }) => {
                     {/* Search Location */}
                     <div className="flex-1 relative">
                         <label className="block font-medium text-gray-700">Location</label>
-                        
-                            <input
-                                type="text"
-                                placeholder="Search Location"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500"
-                            />
-                            <button onClick={handleSearch} className="absolute right-0 top-0 mt-6 mr bg-purple-500 hover:bg-purple-700 text-white p-2 rounded-lg">
-                                <SearchIcon />
-                            </button>
-                       
+
+                        <input
+                            type="text"
+
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500"
+                        />
+                        <button onClick={handleSearch} className="absolute right-0 top-0 mt-6 mr bg-purple-500 hover:bg-purple-700 text-white p-2 rounded-lg">
+                            <SearchIcon />
+                        </button>
 
 
-                {/* Location Suggestions */}
-                {locations.length > 0 && (
-                    <ul className="absolute bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto w-full">
-                        {locations.map((location) => (
-                            <li
-                                key={location.id}
-                                className="p-2 hover:bg-gray-100 cursor-pointer"
-                                onClick={() => handleLocationSelect(location.id)}
-                            >
-                                {location.name}, {location.city}
-                            </li>
-                        ))}
-                    </ul>
-                )}
 
-                </div>
+                        {/* Location Suggestions */}
+                        {locations.length > 0 && (
+                            <ul className="absolute bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto w-full">
+                                {locations.map((location) => (
+                                    <li
+                                        key={location.id}
+                                        className="p-2 hover:bg-gray-100 cursor-pointer"
+                                        onClick={() => handleLocationSelect(location.id)}
+                                    >
+                                        {location.name}, {location.city}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                    </div>
                 </div>
 
                 {/* Other details */}
                 <div className="flex mt-4 space-x-4">
                     <div className="flex-1">
                         <label className="block font-medium text-gray-700">Date</label>
-                        <input type="date" className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
+                        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
                     </div>
                     <div className="flex-1">
                         <label className="block font-medium text-gray-700">Time</label>
-                        <input type="time" className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
+                        <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
                     </div>
                 </div>
                 <div className="mt-4">
                     <label className="block font-medium text-gray-700">Description</label>
-                    <textarea placeholder="Enter Description" className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
+                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
                 </div>
                 <div className="mt-4">
                     <label className="block font-medium text-gray-700">Number of People</label>
-                    <input type="number" placeholder="Enter Number" className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
+                    <input type="number" value={numberOfPeople} onChange={(e) => setnumberOfPeople(e.target.value)} className="p-2 rounded-lg border-purple-300 w-full focus:ring-purple-500 focus:border-purple-500" />
                 </div>
                 <div className="flex justify-end mt-4">
-                    <button onClick={onClose} className="rounded-full border border-gray-400 bg-gradient-to-t from-[#8D8DDA] to-white text-black hover:from-[#8080d7] hover:to-white shadow-md font-bold py-2 px-4 rounded text-xs">
+                    <button onClick={handleSubmit} className="rounded-full border border-gray-400 bg-gradient-to-t from-[#8D8DDA] to-white text-black hover:from-[#8080d7] hover:to-white shadow-md font-bold py-2 px-4 rounded text-xs">
                         Modify Plan
                     </button>
                 </div>

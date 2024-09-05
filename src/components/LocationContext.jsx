@@ -4,6 +4,7 @@ export const LocationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
   const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectLocation] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchLocations = async (locationQuery, businessType) => {
@@ -30,7 +31,7 @@ export const LocationProvider = ({ children }) => {
   };
 
   return (
-    <LocationContext.Provider value={{ locations, fetchLocations, loading }}>
+    <LocationContext.Provider value={{ locations,selectedLocation, setSelectLocation, fetchLocations, loading }}>
       {children}
     </LocationContext.Provider>
   );
