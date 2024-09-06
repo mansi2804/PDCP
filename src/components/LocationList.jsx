@@ -106,7 +106,7 @@ function LocationList() {
                                             <p className="text-xs">Location: {location.address}</p>
                                             <p className="text-xs">phone_number: {location.phone_number}</p>
                                             <p className="text-xs">Distance: {location.distance} miles</p>
-                                            <p className="text-xs">Price: ${location.price}</p>
+                                            <p className="text-xs">price_level: {location.price_level}</p>
                                         </div>
                                         <div className="relative h-full">
                                             <div className="absolute bottom-8 right-8 flex flex-row gap-2">
